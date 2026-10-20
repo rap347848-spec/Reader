@@ -1,1 +1,3 @@
-
+<resources>
+    <string name="accessibility_description">يقرأ النص المحدد أو النص الظاهر في التطبيق الذي تستخدمه عند طلب ذلك.</string>
+</resources>
