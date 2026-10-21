@@ -3,6 +3,7 @@ package com.example.arabicvoiceaccess
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -32,9 +33,12 @@ class MainActivity : Activity() {
             text = "\nيقرأ لك أي نص ظاهر على الشاشة في فيسبوك وواتساب والمتصفح وغيرها.\n\n" +
                 "1. اضغط «تفعيل الخدمة» وفعّل «قارئ الشاشة» من إعدادات إمكانية الوصول.\n" +
                 "2. سيظهر قلم عائم فوق كل التطبيقات، ويمكنك سحبه إلى أي مكان.\n" +
-                "3. اضغط على القلم ثم اضغط على النص الذي تريد قراءته.\n" +
-                "4. اضغط على القلم مرة أخرى للخروج من وضع القلم.\n" +
-                "5. الضغط المطوّل على القلم يقرأ كل ما هو ظاهر على الشاشة.\n\n" +
+                "3. اضغط على القلم مرة واحدة فيظهر خياران:\n" +
+                "   • قراءة كل الشاشة.\n" +
+                "   • تحديد مربع حر: ارسم مربعاً بإصبعك حول النص فيُقرأ ما بداخله.\n" +
+                "4. اضغط على القلم مرة أخرى للخروج من وضع التحديد.\n" +
+                "5. لإغلاق القلم: اسحبه إلى أسفل منتصف الشاشة وأفلته داخل دائرة ×.\n" +
+                "    ولإعادته اضغط «إظهار القلم» هنا.\n\n" +
                 "ملاحظة: في أندرويد 13 وما بعده، إذا كان خيار الخدمة رمادياً، اضغط «معلومات التطبيق» " +
                 "ثم القوائم الثلاث ⋮ ثم «السماح بالإعدادات المقيّدة»."
             textSize = 16f
@@ -79,6 +83,23 @@ class MainActivity : Activity() {
             textSize = 13f
             gravity = Gravity.CENTER
             setTextColor(Color.GRAY)
+        }, matchWrap())
+
+        // Credit
+        root.addView(TextView(this).apply {
+            text = "\nتصميم طلال قاسم"
+            textSize = 20f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setTextColor(Color.rgb(24, 68, 120))
+        }, matchWrap())
+
+        root.addView(TextView(this).apply {
+            text = "0599347848"
+            textSize = 18f
+            gravity = Gravity.CENTER
+            setTextColor(Color.rgb(24, 68, 120))
+            setPadding(0, 4, 0, 24)
         }, matchWrap())
 
         val scroll = ScrollView(this)
