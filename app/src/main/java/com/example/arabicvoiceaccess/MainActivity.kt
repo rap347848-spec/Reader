@@ -10,10 +10,21 @@ import android.provider.Settings
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.*
+// تم استيراد مكتبات AdMob المطلوبة هنا:
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : Activity() {
+    
+    private lateinit var adView: AdView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // تهيئة خدمة الإعلانات
+        MobileAds.initialize(this) {}
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -101,6 +112,16 @@ class MainActivity : Activity() {
             setTextColor(Color.rgb(24, 68, 120))
             setPadding(0, 4, 0, 24)
         }, matchWrap())
+
+        // --- إضافة إعلان البانر برمجياً في أسفل الشاشة ---
+        adView = AdView(this).apply {
+            setAdSize(AdSize.BANNER)
+            // استخدام معرف وحدة البانر الخاصة بك:
+            adUnitId = "ca-app-pub-3407676171751539/6423981030"
+            loadAd(AdRequest.Builder().build())
+        }
+        root.addView(adView, matchWrap())
+        // ----------------------------------------------
 
         val scroll = ScrollView(this)
         scroll.addView(root)
