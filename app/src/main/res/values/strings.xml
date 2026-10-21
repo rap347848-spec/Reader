@@ -1,3 +1,4 @@
 <resources>
-    <string name="accessibility_description">يقرأ النص المحدد أو النص الظاهر في التطبيق الذي تستخدمه عند طلب ذلك.</string>
+    <string name="app_name">قارئ الشاشة</string>
+    <string name="accessibility_description">يعرض قلماً عائماً فوق التطبيقات، وعند الضغط على نص في الشاشة يقرؤه صوتياً.</string>
 </resources>
