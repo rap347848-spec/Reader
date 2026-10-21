@@ -2,6 +2,8 @@ package com.example.arabicvoiceaccess
 
 import android.app.Activity
 import android.content.Intent
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
@@ -12,6 +14,9 @@ import android.graphics.Color
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= 33) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+        }
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
@@ -45,9 +50,13 @@ class MainActivity : Activity() {
         val start = Button(this).apply {
             text = "بدء قراءة الشاشة"
             setOnClickListener {
-                ReaderAccessibilityService.requestReadScreen = true
-                Toast.makeText(this@MainActivity, "افتح التطبيق المطلوب ثم ارجع للإشعار الخاص بالقارئ.", Toast.LENGTH_LONG).show()
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                val svc = ReaderAccessibilityService.instance
+                if (svc == null) {
+                    Toast.makeText(this@MainActivity, "فعّل الخدمة أولاً من إعدادات إمكانية الوصول.", Toast.LENGTH_LONG).show()
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                } else {
+                    Toast.makeText(this@MainActivity, "افتح التطبيق المطلوب ثم اضغط «قراءة الشاشة» في الإشعار.", Toast.LENGTH_LONG).show()
+                }
             }
         }
         root.addView(start, matchWrap())

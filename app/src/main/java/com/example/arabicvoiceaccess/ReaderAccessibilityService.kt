@@ -5,9 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.view.accessibility.AccessibilityWindowInfo
 import java.util.Locale
 
 class ReaderAccessibilityService : AccessibilityService(), TextToSpeech.OnInitListener {
@@ -19,10 +22,34 @@ class ReaderAccessibilityService : AccessibilityService(), TextToSpeech.OnInitLi
 
     companion object {
         @Volatile var requestReadScreen = false
+        @Volatile var instance: ReaderAccessibilityService? = null
+    }
+
+    // Reads the app that is currently on screen (not the notification shade).
+    fun readNow() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!ttsReady) return@postDelayed
+            var root: AccessibilityNodeInfo? = null
+            try {
+                for (w in windows) {
+                    if (w.type == AccessibilityWindowInfo.TYPE_APPLICATION) {
+                        root = w.root
+                        if (root != null) break
+                    }
+                }
+            } catch (_: Exception) { }
+            if (root == null) root = rootInActiveWindow
+            val collected = collectVisibleText(root)
+            if (collected.isNotBlank()) {
+                lastSpoken = ""
+                speak(collected)
+            }
+        }, 700)
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        instance = this
         tts = TextToSpeech(this, this)
         createReaderNotification()
     }
@@ -115,6 +142,7 @@ class ReaderAccessibilityService : AccessibilityService(), TextToSpeech.OnInitLi
     }
 
     override fun onDestroy() {
+        instance = null
         tts?.stop()
         tts?.shutdown()
         super.onDestroy()
