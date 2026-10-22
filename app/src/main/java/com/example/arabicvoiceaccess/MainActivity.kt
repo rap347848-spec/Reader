@@ -10,21 +10,14 @@ import android.provider.Settings
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.*
-// تم استيراد مكتبات AdMob المطلوبة هنا:
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 
 class MainActivity : Activity() {
-    
-    private lateinit var adView: AdView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // تهيئة خدمة الإعلانات
-        MobileAds.initialize(this) {}
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -113,19 +106,26 @@ class MainActivity : Activity() {
             setPadding(0, 4, 0, 24)
         }, matchWrap())
 
-        // --- إضافة إعلان البانر برمجياً في أسفل الشاشة ---
-        adView = AdView(this).apply {
-            setAdSize(AdSize.BANNER)
-            // استخدام معرف وحدة البانر الخاصة بك:
-            adUnitId = "ca-app-pub-3407676171751539/6423981030"
-            loadAd(AdRequest.Builder().build())
-        }
-        root.addView(adView, matchWrap())
-        // ----------------------------------------------
-
         val scroll = ScrollView(this)
         scroll.addView(root)
-        setContentView(scroll)
+
+        // Banner ad: shown only inside this main screen, never over other apps.
+        MobileAds.initialize(this) { }
+        val adView = AdView(this)
+        adView.setAdSize(AdSize.BANNER)
+        adView.adUnitId = getString(R.string.admob_banner_id)
+
+        val page = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        page.addView(scroll, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f
+        ))
+        val adParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        adParams.gravity = Gravity.CENTER_HORIZONTAL
+        page.addView(adView, adParams)
+        setContentView(page)
+        adView.loadAd(AdRequest.Builder().build())
     }
 
     private fun matchWrap() = LinearLayout.LayoutParams(
