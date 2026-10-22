@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">قارئ الشاشة</string>
     <string name="accessibility_description">يعرض قلماً عائماً فوق التطبيقات، وعند الضغط على نص في الشاشة يقرؤه صوتياً.</string>
+
+    <!-- AdMob: هذه معرّفات اختبار من Google. استبدلها بمعرّفاتك الحقيقية قبل النشر. -->
+    <string name="admob_app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
